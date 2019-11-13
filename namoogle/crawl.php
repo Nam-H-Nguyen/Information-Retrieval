@@ -6,6 +6,8 @@ include("./config.php");
 $alreadyCrawled = array();
 // Links still needed to be crawled
 $crawling = array();
+// Images still needed to be crawled
+$alreadyFoundImages = array();
 
 function linkExists($url) {
     // referencing global config variable for connecting to local database
@@ -102,6 +104,26 @@ function getDetails($url) {
     } else {
         echo "ERROR: Failed to insert $url<br>";
     }
+
+    $imageArray = $parser->getImgTags();
+
+    foreach ($imageArray as $image) {
+        $src = $image->getAttribute("src");
+        $alt = $image->getAttribute("alt");
+        $title = $image->getAttribute("title");
+
+        // ignore images that do not have title and alt
+        if (!$title && !alt) {
+            continue;
+        }
+
+        // convert relative link to absolute link to find the image
+        $src = createLink($src, $url);
+
+        if (!in_array($src, $alreadyFoundImages)) {
+            $alreadyFoundImages[] = $src;
+        }
+    }
 }
 
 /* Parse WebPages from input URL for a tags and return valid URLs */
@@ -150,7 +172,7 @@ function followLinks($url) {
     }
 }
 
-$startUrl = "https://www.bbc.com";
+$startUrl = "https://www.foodnetwork.com";
 followLinks($startUrl);
 
 ?>

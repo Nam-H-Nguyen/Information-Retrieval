@@ -34,6 +34,10 @@ class DomDocumentParser {
         // Built in php function to get meta tags
         return $this->doc->getElementsByTagName("meta");
     }
+    public function getImgTags() {
+        // Built in php function to get meta tags
+        return $this->doc->getElementsByTagName("img");
+    }
 }
 
 ?>
