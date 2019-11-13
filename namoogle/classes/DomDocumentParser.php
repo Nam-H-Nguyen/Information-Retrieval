@@ -24,6 +24,16 @@ class DomDocumentParser {
         // Built in php function to get a tags
         return $this->doc->getElementsByTagName("a");
     }
+
+    public function getTitleTags() {
+        // Built in php function to get title tags
+        return $this->doc->getElementsByTagName("title");
+    }
+
+    public function getMetaTags() {
+        // Built in php function to get meta tags
+        return $this->doc->getElementsByTagName("meta");
+    }
 }
 
 ?>

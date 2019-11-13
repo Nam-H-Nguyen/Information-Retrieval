@@ -1,4 +1,6 @@
 <?php
+	include("./config.php");
+
     // Gets the query value from the URL (when user type in a query)
     // Check to see if the query is set or not (exists or not)
 	if(isset($_GET["query"])) {

@@ -1,10 +1,38 @@
 <?php
 include("./classes/DomDocumentParser.php");
+include("./config.php");
 
 // WebPages that are already crawled will be stored here
 $alreadyCrawled = array();
 // Links still needed to be crawled
 $crawling = array();
+
+function linkExists($url) {
+    // referencing global config variable for connecting to local database
+    global $con;
+
+    $query = $con->prepare("SELECT * FROM sites WHERE url = :url");
+
+    $query->bindParam(":url", $url);
+    $query->execute();
+
+    return $query->rowCount() != 0;
+}
+
+function insertLink($url, $title, $description, $keywords) {
+    // referencing global config variable for connecting to local database
+    global $con;
+
+    $query = $con->prepare("INSERT INTO sites(url, title, description, keywords)
+                            VALUES(:url, :title, :description, :keywords)");
+
+    $query->bindParam(":url", $url);
+    $query->bindParam(":title", $title);
+    $query->bindParam(":description", $description);
+    $query->bindParam(":keywords", $keywords);
+
+    return $query->execute();
+}
 
 /* Parse url and regenerate valid url links from edge cases */
 function createLink($src, $url) {
@@ -28,6 +56,52 @@ function createLink($src, $url) {
    }
 
    return $src;
+}
+
+/* Get Title, Description, Keyword Snippets */
+function getDetails($url) {
+    $parser = new DomDocumentParser($url);
+
+    $titleArray = $parser->getTitleTags();
+
+    if ($titleArray->item(0) == NULL || sizeof($titleArray) == 0) {
+        return;
+    }
+
+    $title = $titleArray->item(0)->nodeValue;
+    $title = str_replace("\n", "", $title); // replace all new lines with empty string
+
+    // Don't crawl link and don't save to database
+    if ($title == "") {
+        return;
+    }
+
+    $description = "";
+    $keywords = "";
+
+    $metasArray = $parser->getMetaTags();
+
+    foreach ($metasArray as $meta) {
+        if ($meta->getAttribute("name") == "description") {
+            $description = $meta->getAttribute("content");
+        }
+
+        if ($meta->getAttribute("name") == "keywords") {
+            $description = $meta->getAttribute("content");
+        }
+    }
+
+    $description = str_replace("\n", "", $description);
+    $keywords = str_replace("\n", "", $keywords);
+
+    // Check to see whether or not url already exist in database
+    if (linkExists($url)) {
+        echo "$url already exists<br>";
+    } else if (insertLink($url, $title, $description, $keywords)) {
+        echo "Successfully added $url<br>";
+    } else {
+        echo "ERROR: Failed to insert $url<br>";
+    }
 }
 
 /* Parse WebPages from input URL for a tags and return valid URLs */
@@ -58,7 +132,10 @@ function followLinks($url) {
             $alreadyCrawled[] = $href;
             $crawling[] = $href;
 
+            getDetails($href);
             // Insert $href into database;
+        } else {
+            return;
         }
 
         echo $href . "<br>";
@@ -73,7 +150,7 @@ function followLinks($url) {
     }
 }
 
-$startUrl = "https://www.foodnetwork.com";
+$startUrl = "https://www.bbc.com";
 followLinks($startUrl);
 
 ?>
