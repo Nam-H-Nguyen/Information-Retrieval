@@ -124,8 +124,14 @@
 				if ($currentPage < 1) {
 					$currentPage = 1;
 				}
-				
-				while ($pagesLeft != 0) {
+
+				// Case: Nearing towards the end, will not increment over pass the
+				// number of pages to display
+				if ($currentPage + $pagesLeft > $numPages + 1) {
+					$currentPage = $numPages - $pagesLeft;
+				}
+
+				while ($pagesLeft != 0 && $currentPage <= $numPages) {
 					// Current page is not clickable
 					if ($currentPage == $page) {
 						echo "<div class='pageNumberContainer'>
