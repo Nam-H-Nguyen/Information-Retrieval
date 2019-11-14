@@ -13,9 +13,10 @@
 		exit("You must enter a search query");
 	}
 
+	// Type defaults to sites otherwise set to type
 	$type = isset($_GET["type"]) ? $_GET["type"] : "sites";
-
-
+	// Specify page or Set default to page 1
+	$page = isset($_GET["page"]) ? $_GET["page"] : 1;
 
 ?>
 <!DOCTYPE html>
@@ -89,9 +90,11 @@
 			<!-- Printing out the number of search results -->
 			<?php
 				$resultsProvider = new SiteResultsProvider($con);
+				$pageLimit = 20;
+
 				$numResults = $resultsProvider->getNumResults($query);
 				echo "<p class='resultsCount'>$numResults results found</p>";
-				echo $resultsProvider->getResultsHTML(1, 20, $query);
+				echo $resultsProvider->getResultsHTML($page, $pageLimit, $query);
 			?>
 		</div>
 	</div>

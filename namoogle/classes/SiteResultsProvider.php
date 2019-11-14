@@ -30,15 +30,24 @@ class SiteResultsProvider {
     }
 
     public function getResultsHTML($page, $pageSize, $query) {
+
+        // page 1 : (1 - 1) * 20 = 0
+        // page 2 : (2 - 1) * 20 = 20
+        // page 3 : (3 - 1) * 20 = 40
+        $fromLimit = ($page - 1) * $pageSize;
+
         $search = $this->con->prepare("SELECT *
                                         FROM sites WHERE title LIKE :query
                                         OR url LIKE :query
                                         OR keywords LIKE :query
                                         OR description LIKE :query
-                                        ORDER BY clicks DESC");
+                                        ORDER BY clicks DESC
+                                        LIMIT :fromLimit, :pageSize");
 
         $searchQuery = "%".$query."%";
         $search->bindParam(":query", $searchQuery);
+        $search->bindParam(":fromLimit", $fromLimit, PDO::PARAM_INT);
+        $search->bindParam(":pageSize", $pageSize, PDO::PARAM_INT);
         $search->execute();
 
         $resultsHTML = "<div class='siteResults'>";
