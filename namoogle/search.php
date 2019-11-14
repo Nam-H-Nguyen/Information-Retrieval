@@ -1,5 +1,6 @@
 <?php
 	include("./config.php");
+	include("./classes/SiteResultsProvider.php");
 
     // Gets the query value from the URL (when user type in a query)
     // Check to see if the query is set or not (exists or not)
@@ -81,6 +82,16 @@
 
 
 
+		</div>
+
+		<div class="mainResultsSection">
+			<!-- Printing out the number of search results -->
+			<?php
+				$resultsProvider = new SiteResultsProvider($con);
+				$numResults = $resultsProvider->getNumResults($query);
+				echo "<p class='resultsCount'>$numResults results found</p>";
+				echo $resultsProvider->getResultsHTML(1, 20, $query);
+			?>
 		</div>
 	</div>
 

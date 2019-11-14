@@ -36,6 +36,21 @@ function insertLink($url, $title, $description, $keywords) {
     return $query->execute();
 }
 
+function insertImage($url, $src, $title, $alt) {
+    // referencing global config variable for connecting to local database
+    global $con;
+
+    $query = $con->prepare("INSERT INTO images(siteURL, imageURL, title, alt)
+                            VALUES(:siteURL, :imageURL, :title, :alt)");
+
+    $query->bindParam(":siteURL", $url);
+    $query->bindParam(":imageURL", $src);
+    $query->bindParam(":title", $title);
+    $query->bindParam(":alt", $alt);
+
+    return $query->execute();
+}
+
 /* Parse url and regenerate valid url links from edge cases */
 function createLink($src, $url) {
 
@@ -62,6 +77,9 @@ function createLink($src, $url) {
 
 /* Get Title, Description, Keyword Snippets */
 function getDetails($url) {
+    // referencing global config variable for inserting images to local database
+    global $alreadyFoundImages;
+
     $parser = new DomDocumentParser($url);
 
     $titleArray = $parser->getTitleTags();
@@ -105,6 +123,7 @@ function getDetails($url) {
         echo "ERROR: Failed to insert $url<br>";
     }
 
+/*
     $imageArray = $parser->getImgTags();
 
     foreach ($imageArray as $image) {
@@ -113,7 +132,7 @@ function getDetails($url) {
         $title = $image->getAttribute("title");
 
         // ignore images that do not have title and alt
-        if (!$title && !alt) {
+        if (!$title && !$alt) {
             continue;
         }
 
@@ -122,8 +141,12 @@ function getDetails($url) {
 
         if (!in_array($src, $alreadyFoundImages)) {
             $alreadyFoundImages[] = $src;
+
+            // Insert images into database
+            echo "INSERT: " . insertImage($url, $src, $title, $alt);
         }
     }
+*/
 }
 
 /* Parse WebPages from input URL for a tags and return valid URLs */
@@ -156,9 +179,10 @@ function followLinks($url) {
 
             getDetails($href);
             // Insert $href into database;
-        } else {
-            return;
         }
+        // else {
+        //     return;
+        // }
 
         echo $href . "<br>";
     }

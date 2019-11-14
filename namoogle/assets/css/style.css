@@ -161,3 +161,13 @@ body {
   font-weight: bold;
   color: #1a73e8;
 }
+
+.mainResultsSection {
+  flex: 1; /* Fill up the remaining section for all the result sites from query */
+}
+
+.mainResultsSection .resultsCount {
+  font-size: 13px;
+  color: #808080;
+  margin-left: 150px;
+}
