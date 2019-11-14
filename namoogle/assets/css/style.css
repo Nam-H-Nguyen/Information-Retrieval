@@ -171,3 +171,37 @@ body {
   color: #808080;
   margin-left: 150px;
 }
+
+.mainResultsSection .siteResults {
+  margin-left: 150px;
+}
+
+.resultContainer {
+  display: flex;
+  flex-direction: column; /* Each child is a separate line*/
+  margin-bottom: 26px; /* Create space between each result */
+}
+
+.resultContainer .title {
+  margin: 0; /* h tags comes with default margins, so get rid of it */
+}
+
+.resultContainer .title a {
+  color: #1a0dab;
+  text-decoration: none;
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.resultContainer .title a:hover {
+  text-decoration: underline;
+}
+
+.resultContainer .url {
+  color: #006621;
+  font-size: 14px;
+}
+
+.resultContainer .description {
+  font-size: 12px;
+}

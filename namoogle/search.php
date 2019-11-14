@@ -1,6 +1,7 @@
 <?php
 	include("./config.php");
 	include("./classes/SiteResultsProvider.php");
+	// setcookie('samesite-test', '1', 0, '/; samesite=strict');
 
     // Gets the query value from the URL (when user type in a query)
     // Check to see if the query is set or not (exists or not)
@@ -45,7 +46,7 @@
 
 						<div class="searchBarContainer">
 
-							<input class="searchBox" type="text" name="query">
+							<input class="searchBox" type="text" name="query" value="<?php echo $query?>">
 							<button class="searchButton">
 								<img src="https://drive.google.com/uc?export=view&id=1WUN4N6h-gLJczwUDjb1fMVHxQ48e6tPt" alt="Search_Icon">
 							</button>
