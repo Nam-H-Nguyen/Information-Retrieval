@@ -122,8 +122,6 @@ function getDetails($url) {
     } else {
         echo "ERROR: Failed to insert $url<br>";
     }
-
-/*
     $imageArray = $parser->getImgTags();
 
     foreach ($imageArray as $image) {
@@ -146,7 +144,6 @@ function getDetails($url) {
             echo "INSERT: " . insertImage($url, $src, $title, $alt);
         }
     }
-*/
 }
 
 /* Parse WebPages from input URL for a tags and return valid URLs */

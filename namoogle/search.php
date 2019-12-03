@@ -25,6 +25,7 @@
         <meta charset="utf-8">
         <title>Welcome to Namoogle Search Engine!</title>
         <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     </head>
 <body>
 
@@ -160,6 +161,6 @@
 			</div>
 		</div>
 	</div>
-
+	<script type="text/javascript" src="assets/js/script.js"></script>
 </body>
 </html>
