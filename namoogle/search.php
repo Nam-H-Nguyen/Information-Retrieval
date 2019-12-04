@@ -1,6 +1,7 @@
 <?php
 	include("./config.php");
 	include("./classes/SiteResultsProvider.php");
+	include("./classes/ImageResultsProvider.php");
 	// setcookie('samesite-test', '1', 0, '/; samesite=strict');
 
     // Gets the query value from the URL (when user type in a query)
@@ -47,6 +48,8 @@
 					<form action="search.php" method="GET">
 
 						<div class="searchBarContainer">
+							<!-- Remember the type sites vs images that the user clicks on for searching -->
+							<input type="hidden" name="Type" value="<?php echo $type; ?>">
 
 							<input class="searchBox" type="text" name="query" value="<?php echo $query?>">
 							<button class="searchButton">
@@ -90,8 +93,13 @@
 		<div class="mainResultsSection">
 			<!-- Printing out the number of search results -->
 			<?php
-				$resultsProvider = new SiteResultsProvider($con);
-				$pageSize = 20;
+				if ($type == "sites") {
+					$resultsProvider = new SiteResultsProvider($con);
+					$pageSize = 20;
+				} else {
+					$resultsProvider = new ImageResultsProvider($con);
+					$pageSize = 30;
+				}
 
 				$numResults = $resultsProvider->getNumResults($query);
 				echo "<p class='resultsCount'>$numResults results found</p>";
@@ -161,6 +169,9 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Masonry Layout: Automatically resizes the grids -->
+	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 	<script type="text/javascript" src="assets/js/script.js"></script>
 </body>
 </html>

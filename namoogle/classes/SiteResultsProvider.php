@@ -59,6 +59,9 @@ class SiteResultsProvider {
             $title = $row["title"];
             $description = $row["description"];
 
+            // Do not list the websites without a title or description
+            if ($title == "" || $description == "") continue;
+
             $title = $this->trimField($title, 55);
             $description = $this->trimField($description, 230);
 
