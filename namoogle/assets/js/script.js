@@ -47,7 +47,9 @@ function loadImage(src, className) {
     
     // if image is broken, update it on database so will not list the image again
     image.on("error", function() {
-        
+        $("." + className).remove();    // Remove the image from being listed
+        console.log(src);
+        $.post("ajax/setBroken.php", {src: src});
     });
     
     // Attach an attribute to the img tag
