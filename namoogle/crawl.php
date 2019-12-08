@@ -24,6 +24,7 @@ function linkExists($url) {
 function insertLink($url, $title, $description, $keywords) {
     // referencing global config variable for connecting to local database
     global $con;
+    global $doc;
 
     $query = $con->prepare("INSERT INTO sites(url, title, description, keywords)
                             VALUES(:url, :title, :description, :keywords)");
@@ -32,6 +33,15 @@ function insertLink($url, $title, $description, $keywords) {
     $query->bindParam(":title", $title);
     $query->bindParam(":description", $description);
     $query->bindParam(":keywords", $keywords);
+
+    $doc->addField('url', $url);
+    $doc->addField('title', $title);
+    $doc->addField('description', $description);
+    $doc->addField('keywords', $keywords);
+
+    $updateResponse = $client->addDocument($doc);
+
+    print_r($updateResponse->getResponse());
 
     return $query->execute();
 }
@@ -193,7 +203,7 @@ function followLinks($url) {
     }
 }
 
-$startUrl = "https://www.foodnetwork.com";
+$startUrl = "https://www.allrecipes.com";
 followLinks($startUrl);
 
 ?>

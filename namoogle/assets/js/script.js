@@ -28,7 +28,27 @@ $(document).ready(function() {
         columnWidth: 200,
         gutter: 5,
         isInitLayout: false
-    })
+    });
+    
+    // Use fancybox to preview images
+    $("[data-fancybox]").fancybox({
+        caption: function(instance, item) {
+            var caption = $(this).data('caption') || '';
+            var siteUrl = $(this).data('siteurl') || '';
+
+            if ( item.type === 'image' ) {
+                caption = (caption.length ? caption + '<br />' : '')
+                 + '<a href="' + item.src + '">View image</a><br>' 
+                 + '<a href="' + siteUrl + '">View page</a>';
+            }
+
+            return caption;
+        },
+        afterShow: function(instance, item) {
+            increaseImageClicks(item.src);
+        }
+    });
+    
 });
 
 function loadImage(src, className) {
@@ -57,8 +77,6 @@ function loadImage(src, className) {
 }
 
 function increaseLinkClicks(linkId, url) {
-    console.log(linkId);
-    console.log(url);
     // Post AJAX call
     $.post("ajax/updateLinkCount.php", {linkId: linkId})
     .done(function (result) {
@@ -70,5 +88,17 @@ function increaseLinkClicks(linkId, url) {
         
         window.location.href = url;
     });
-    
+}
+
+function increaseImageClicks(imageURL) {
+    // Post AJAX call
+    $.post("ajax/updateImageCount.php", {imageURL: imageURL})
+    .done(function (result) {
+        // result comes from the post ajax call
+        if (result != "") {
+            alert(result);
+            return;
+        }
+        
+    });
 }
